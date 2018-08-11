@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_gis',
+    'corsheaders',
     'simple_history',
     'colorfield',
     'api'
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'interactivemap.urls'
@@ -136,5 +139,13 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+    'interactivemap-frontend-*.now.sh',
+)
