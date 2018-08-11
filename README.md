@@ -1,5 +1,7 @@
 # InteractiveMap Back-end
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/88a82403b6e9403a9575b766aa74aaa9)](https://app.codacy.com/app/whirish/backend?utm_source=github.com&utm_medium=referral&utm_content=interactivemap/backend&utm_campaign=badger)
+
 ## Getting Started
 ```bash
 # Clone the repo
