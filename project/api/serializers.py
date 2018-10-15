@@ -3,7 +3,7 @@ from json import loads, dumps
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import serializers
-
+import geobuf
 from .models import PoliticalEntity, Territory, DiplomaticRelation
 
 
@@ -51,6 +51,12 @@ class TerritorySerializer(serializers.ModelSerializer):
             ret['geo'] = data['geo']
 
         return ret
+
+    def to_representation(self, instance):
+        data = super(TerritorySerializer, self).to_representation(instance)
+        gbuf = geobuf.encode(data["geo"])
+        data["geo"] = gbuf.hex()
+        return data
 
     class Meta:
         model = Territory
