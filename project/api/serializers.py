@@ -53,9 +53,15 @@ class TerritorySerializer(serializers.ModelSerializer):
         return ret
 
     def to_representation(self, instance):
+        """
+        Serialize territories for API response.
+        """
         data = super(TerritorySerializer, self).to_representation(instance)
+
+        # Compress geojson to geobuf and return as hexadecimal
         gbuf = geobuf.encode(data["geo"])
         data["geo"] = gbuf.hex()
+
         return data
 
     class Meta:
