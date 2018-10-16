@@ -20,6 +20,7 @@ class GeoField(serializers.RelatedField):
     """
     Field Serializer for Territories
     """
+    @classmethod
     def to_representation(self, value):
         # Compress geojson to geobuf and return as hexadecimal
         gbuf = geobuf.encode(loads(value.geojson))
