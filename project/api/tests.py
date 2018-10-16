@@ -335,7 +335,7 @@ class APITest(APITestCase):
 
     def test_api_can_decompress_geojson(self):
         """
-        Ensure we can query for all territories
+        Ensure we send geometry as a valid geobuf.
         """
         url = reverse("territory-list")
         response = self.client.get(url, format="json")
