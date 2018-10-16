@@ -16,6 +16,16 @@ class PoliticalEntitySerializer(serializers.ModelSerializer):
         exclude = ('polymorphic_ctype',)
 
 
+class GeoField(serializers.RelatedField):
+    """
+    Field Serializer for Territories
+    """
+    def to_representation(self, value):
+        # Compress geojson to geobuf and return as hexadecimal
+        gbuf = geobuf.encode(loads(value.geojson))
+        return gbuf.hex()
+
+
 class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
@@ -24,6 +34,8 @@ class TerritorySerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='url_id'
     )
+
+    geo = GeoField(read_only=True)
 
     def to_internal_value(self, data):
         ret = {}
@@ -51,18 +63,6 @@ class TerritorySerializer(serializers.ModelSerializer):
             ret['geo'] = data['geo']
 
         return ret
-
-    def to_representation(self, instance):
-        """
-        Serialize territories for API response.
-        """
-        data = super(TerritorySerializer, self).to_representation(instance)
-
-        # Compress geojson to geobuf and return as hexadecimal
-        gbuf = geobuf.encode(data["geo"])
-        data["geo"] = gbuf.hex()
-
-        return data
 
     class Meta:
         model = Territory
