@@ -1,6 +1,5 @@
 from json import loads, dumps
 
-from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import serializers
 

@@ -8,7 +8,6 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework.test import APITestCase
-from os import environ
 from .models import PoliticalEntity, Territory, DiplomaticRelation
 from .factories import (
     PoliticalEntityFactory,
