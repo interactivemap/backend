@@ -41,14 +41,14 @@ class Entity(PolymorphicModel):
 
     # required fields
     references = ArrayField(models.TextField(max_length=150))
-    links = ArrayField(models.URLField(), default=list(""))
+    links = ArrayField(models.URLField(), default=list)
     description = models.TextField(
         help_text="Flavor text, brief history, etc.", blank=True
     )
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        default=list(""),
+        default=list,
     )
 
     def natural_key(self):
