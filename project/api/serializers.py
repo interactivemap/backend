@@ -7,37 +7,32 @@ from .models import PoliticalEntity, Territory, DiplomaticRelation
 
 
 class PoliticalEntitySerializer(serializers.ModelSerializer):
-    """
-    Serializes the PoliticalEntity model
-    """
-
+    """Serializes the PoliticalEntity model."""
     class Meta:
         model = PoliticalEntity
         exclude = ("polymorphic_ctype",)
 
 
 class GeoField(serializers.RelatedField):
-    """
-    Field Serializer for Territories
-    """
+    """Field Serializer for Territories."""
 
     @classmethod
-    def to_representation(self, value):
-        # Compress geojson to geobuf and return as hexadecimal
+    def to_representation(cls, value):
+        """Compress geojson to geobuf and return as hexadecimal."""
         gbuf = geobuf.encode(loads(value.geojson))
         return gbuf.hex()
 
 
 class TerritorySerializer(serializers.ModelSerializer):
-    """
-    Serializes the Territory model as GeoJSON compatible data
-    """
-
-    entity = serializers.SlugRelatedField(read_only=True, slug_field="url_id")
-
+    """Serializes the Territory model as GeoJSON compatible data."""
+    entity = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='url_id'
+    )
     geo = GeoField(read_only=True)
 
     def to_internal_value(self, data):
+        """Return a dictionary of territory data."""
         ret = {}
 
         # Update ret to include passed in data
@@ -72,11 +67,8 @@ class TerritorySerializer(serializers.ModelSerializer):
 
 
 class DiplomaticRelationSerializer(serializers.ModelSerializer):
-    """
-    Serializes the DiplomaticRelation model
-    """
-
-    entity = serializers.SlugRelatedField(read_only=True, slug_field="url_id")
+    """Serializes the DiplomaticRelation model."""
+    entity = serializers.SlugRelatedField(read_only=True, slug_field='url_id')
 
     class Meta:
         model = DiplomaticRelation

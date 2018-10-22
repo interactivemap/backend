@@ -13,7 +13,7 @@ from cryptography.hazmat.backends import default_backend
 
 class IsStaffOrSpecificUser(permissions.BasePermission):
     """
-    Permission to detect whether to user in question is staff or the target user
+    Permission to detect whether the user is staff or the target user.
     Example:
         John (regular user) should be able to access John's account
         Alice (staff) should be able to access John's account
@@ -21,18 +21,17 @@ class IsStaffOrSpecificUser(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        # allow user to list all users if logged in user is staff
-        return view.action == "retrieve" or request.user.is_staff
+        """Allow user to list all users if logged in user is staff."""
+        return view.action == 'retrieve' or request.user.is_staff
 
     def has_object_permission(self, request, view, obj):
-        # allow all users to view specific user information
+        """Allow all users to view specific user information."""
+        # TODO: Actually implement this.
         return True
 
 
 def get_token_auth_header(request):
-    """
-    Obtains the Access Token from the Authorization Header
-    """
+    """Obtains the Access Token from the Authorization Header."""
     auth = request.META.get("HTTP_AUTHORIZATION", None)
     parts = auth.split()
     token = parts[1]
@@ -55,9 +54,11 @@ def requires_scope(required_scope):
                 "https://" + settings.AUTH0_DOMAIN + "/.well-known/jwks.json"
             )
             jwks = json.loads(jsonurl.read())
-            body = re.sub("(.{64})", "\\1\n", jwks["keys"][0]["x5c"][0], 0, re.DOTALL)
+            body = re.sub(
+                "(.{64})", "\\1\n", jwks["keys"][0]["x5c"][0], 0, re.DOTALL)
             cert = (
-                "-----BEGIN CERTIFICATE-----\n" + body + "\n-----END CERTIFICATE-----"
+                "-----BEGIN CERTIFICATE-----\n" + body +
+                "\n-----END CERTIFICATE-----"
             )
             certificate = load_pem_x509_certificate(
                 cert.encode("utf-8"), default_backend()

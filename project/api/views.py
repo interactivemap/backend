@@ -10,10 +10,7 @@ from .filters import TerritoryFilter
 
 
 class PoliticalEntityViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for the PoliticalEntity model
-    """
-
+    """Viewset for the PoliticalEntity model."""
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = PoliticalEntity.objects.all()
     serializer_class = PoliticalEntitySerializer
@@ -23,10 +20,7 @@ class PoliticalEntityViewSet(viewsets.ModelViewSet):
 
 
 class TerritoryViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for the Territory model
-    """
-
+    """Viewset for the Territory model."""
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = TerritorySerializer
     filter_class = TerritoryFilter
@@ -37,10 +31,7 @@ class TerritoryViewSet(viewsets.ModelViewSet):
 
 
 class DiplomaticRelationViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for the DiplomaticRelation model
-    """
-
+    """Viewset for the DiplomaticRelation model."""
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = DiplomaticRelation.objects.all()
     serializer_class = DiplomaticRelationSerializer

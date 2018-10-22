@@ -14,10 +14,12 @@ class TerritoryFilter(FilterSet):
     )
 
     def filter_bounds(self, queryset, field_name, value):
+        """Filters geometries that intersect @bounds."""
         geom = Polygon(make_tuple(value), srid=4326)
         return queryset.filter(geo__intersects=geom)
 
     def filter_date(self, queryset, field_name, value):
+        """Filters territories that exist during @Date."""
         return queryset.filter(start_date__lte=value, end_date__gte=value)
 
     class Meta:

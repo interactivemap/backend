@@ -113,12 +113,13 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarity"
+     "Validator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPassword"
+     "Validator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
+     },
 ]
 
 
@@ -145,18 +146,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
     ),
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",),
 }
 
 CORS_ORIGIN_WHITELIST = ("localhost:3000", "interactivemap-frontend-*.now.sh")
 
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN", "dwaxe.auth0.com")
-API_IDENTIFIER = os.environ.get("API_IDENTIFIER", "https://dwaxe.auth0.com/api/v2/")
-AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID", "iXGypOg8u5cvAhyY7OYxnkGbgNCK9gDT")
+API_IDENTIFIER = os.environ.get(
+    "API_IDENTIFIER", "https://dwaxe.auth0.com/api/v2/")
+AUTH0_CLIENT_ID = os.environ.get(
+    "AUTH0_CLIENT_ID", "iXGypOg8u5cvAhyY7OYxnkGbgNCK9gDT")
 AUTH0_CLIENT_SECRET = os.environ.get(
     "AUTH0_CLIENT_SECRET",
     "sQ-vtQ1Ltzy1JHqwH35M20E6tvuZznXytnPWxa8wUmyuCCn04LMLt342ygg9g51u",
@@ -165,18 +170,22 @@ PUBLIC_KEY = None
 JWT_ISSUER = None
 
 if AUTH0_DOMAIN:
-    jsonurl = request.urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
+    jsonurl = request.urlopen(
+        "https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     # Add a line-break every 64 chars
     # https://stackoverflow.com/questions/2657693/insert-a-newline-character-every-64-characters-using-python
-    body = re.sub("(.{64})", "\\1\n", jwks["keys"][0]["x5c"][0], 0, re.DOTALL)
-    cert = "-----BEGIN CERTIFICATE-----\n" + body + "\n-----END CERTIFICATE-----"
-    certificate = load_pem_x509_certificate(cert.encode("utf-8"), default_backend())
+    body = re.sub("(.{64})", "\\1\n", jwks['keys'][0]['x5c'][0], 0, re.DOTALL)
+    cert = ('-----BEGIN CERTIFICATE-----\n' + body +
+            '\n-----END CERTIFICATE-----')
+    certificate = load_pem_x509_certificate(
+        cert.encode('utf-8'), default_backend())
     PUBLIC_KEY = certificate.public_key()
     JWT_ISSUER = "https://" + AUTH0_DOMAIN + "/"
 
 JWT_AUTH = {
-    "JWT_PAYLOAD_GET_USERNAME_HANDLER": "api.user.jwt_get_username_from_payload_handler",
+    "JWT_PAYLOAD_GET_USERNAME_HANDLER":
+        "api.user.jwt_get_username_from_payload_handler",
     "JWT_PUBLIC_KEY": PUBLIC_KEY,
     "JWT_ALGORITHM": "RS256",
     "JWT_AUDIENCE": API_IDENTIFIER,

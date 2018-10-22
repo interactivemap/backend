@@ -11,24 +11,24 @@ from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 
 class EntityManager(PolymorphicManager):
-    """
-    Manager for the Nation model to handle lookups by url_id
-    """
+    """Manager for the Nation model to handle lookups by url_id."""
 
-    def get_by_natural_key(self, url_id):
+    def get_by_natural_key(self, url_id):  # noqa
         return self.get(url_id=url_id)
 
 
 class Entity(PolymorphicModel):
-    """
-    Cultural/governmental entity. Serves as foreign key for most Territories
+    """Cultural/governmental entity.
+
+    Serves as foreign key for most Territories.
     """
 
     objects = EntityManager()
 
     name = models.TextField(
         max_length=100,
-        help_text="Canonical name, should not include any epithets, must be unique",
+        help_text="Canonical name, which should not include any epithets and"
+        " must be unique",
         unique=True,
     )
     url_id = models.SlugField(
@@ -52,6 +52,7 @@ class Entity(PolymorphicModel):
     )
 
     def natural_key(self):
+        """Return the ID for lookups."""
         return self.url_id
 
     def __str__(self):
@@ -59,8 +60,9 @@ class Entity(PolymorphicModel):
 
 
 class PoliticalEntity(Entity):
-    """
-    Cultural/governmental entity. Serves as foreign key for most Territories
+    """Cultural/governmental entity.
+
+    Serves as foreign key for most Territories.
     """
 
     color = ColorField(
@@ -79,16 +81,15 @@ class PoliticalEntity(Entity):
 
     # History fields
 
-    # Foreign key to auth.User which will be updated every time the model is changed,
-    # and is this stored in history as the user to update a specific revision
-    # Consider other metadata (DateTime) for the revision (may be handled by django-simple-history)
+    # Foreign key to auth.User which we update every time the model changes,
+    # and store in history as the user to update a specific revision.
+    # Consider other metadata (DateTime) for the revision
+    # (may be handled by django-simple-history).
     # TODO: implement this
 
 
 class Territory(models.Model):
-    """
-    Defines the borders and controlled territories associated with an Entity.
-    """
+    """Defines the borders and territories associated with an Entity."""
 
     class Meta:
         verbose_name_plural = "territories"
@@ -103,16 +104,17 @@ class Territory(models.Model):
     history = HistoricalRecords()
 
     def clean(self, *args, **kwargs):
+        """Ensure that our geometry is a polygon and our dates do not intersect
+        with those of another Territory of the same Entity."""
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
         if (
-            loads(self.geo.json)["type"] != "Polygon"
-            and loads(self.geo.json)["type"] != "MultiPolygon"
+            loads(self.geo.json)["type"] != "Polygon" and
+            loads(self.geo.json)["type"] != "MultiPolygon"
         ):
             raise ValidationError(
-                "Only Polygon and MultiPolygon objects are acceptable geometry types."
-            )
-
+                "Only Polygon and MultiPolygon objects are acceptable geometry"
+                " types.")
         try:
             # This date check is inculsive.
             if Territory.objects.filter(
@@ -121,14 +123,15 @@ class Territory(models.Model):
                 entity__exact=self.entity,
             ).exists():
                 raise ValidationError(
-                    "Another territory of this PoliticalEntity exists during this timeframe."
+                    "Another territory of this PoliticalEntity exists during"
+                    " this timeframe."
                 )
         except Entity.DoesNotExist:
             pass
 
         super(Territory, self).clean(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # noqa
         self.full_clean()
         super(Territory, self).save(*args, **kwargs)
 
@@ -141,10 +144,7 @@ class Territory(models.Model):
 
 
 class DiplomaticRelation(models.Model):
-    """
-    Defines political and diplomatic interactions between PoliticalEntitys.
-    """
-
+    """Defines interactions between PoliticalEntitys."""
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
     parent_parties = models.ManyToManyField(
@@ -172,13 +172,13 @@ class DiplomaticRelation(models.Model):
 
     history = HistoricalRecords()
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # noqa
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
 
         super(DiplomaticRelation, self).clean(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # noqa
         self.full_clean()
         super(DiplomaticRelation, self).save(*args, **kwargs)
 
