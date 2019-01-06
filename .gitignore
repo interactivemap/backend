@@ -1,3 +1,5 @@
+# Define what we choose not to track on git.
+
 ### Django ###
 *.log
 *.pot

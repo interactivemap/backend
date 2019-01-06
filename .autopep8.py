@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Autopep8 is a tool to automatically format python code according to the PEP8
+# standards.  Github uses this file for Continuous Integration.
 
 import os
 import subprocess
@@ -24,4 +26,5 @@ if path.startswith(current_path + "/project/"):
         stdout=sys.stdout,
     )
 else:
-    subprocess.run([os.environ["HOME"] + "/.local/bin/autopep8"] + sys.argv[1:])
+    subprocess.run(
+        [os.environ['HOME'] + '/.local/bin/autopep8'] + sys.argv[1:])

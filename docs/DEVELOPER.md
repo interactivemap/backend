@@ -29,9 +29,11 @@ which provides us with a stateless JWT which can be validated through their serv
 [access token](https://auth0.com/docs/tokens/access-token) is required to be passed to the
 backend. You can run tests locally with your own Auth0 configuration as follows:
 
-1. Log into https://manage.auth0.com/#/applications
-2. Create Application > All Scopes > Authorize
-3. See the `client_id`, `client_secret`, and `audience` variables in the example cURL
+1. Log into https://manage.auth0.com/#/applications. It does not matter what names you select.
+2. Create Application > All Scopes > Authorize. Or just create a SPA (Single Page Application).
+3. See the `client_id`, `client_secret`, and `audience` variables in the example cURL.
+
+You should not have to do anything with this information, just make sure that it exists.
 
 ### Database
 
@@ -46,17 +48,6 @@ The project itself uses [docker-compose](https://docs.docker.com/compose/) which
 principally interacted with via a `Makefile`. Running `make` or `make help` will print
 a documented list of all available commands and shortcuts to help with development, so
 a nuanced understanding of docker is not necessary for code contribution.
-
-## Local Development
-
-If you are having trouble with Docker (e.g. on Windows), this project can also be run locally with
-the following changes:
-
-- Create a python virtualenv, activate it, and install the package requirements:
-  `cd backend; virtualenv venv; source venv/bin/activate; pip install -r config/requirements.txt`
-- Install and run Postgres locally
-- Change your DATABASES > default > HOST variable to `localhost` (and maybe change the port to
-  match your Postgres database)
 
 ## API endpoints
 
